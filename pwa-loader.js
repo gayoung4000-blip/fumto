@@ -107,6 +107,65 @@
   // 5. 면접관 가이드용 빨간색 클릭 동그라미 표시 (Pulsing Guide Dot)
   const SHOW_GUIDE_DOTS = true; // 가이드 점 활성화 여부 (true: 표시, false: 해제)
 
+  function initSideIntro() {
+    if (document.querySelector('.side-intro-copy')) return;
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .side-intro-copy {
+        position: fixed;
+        top: 50%;
+        right: calc(50% + 255px);
+        width: min(320px, calc(50vw - 285px));
+        transform: translateY(-50%);
+        z-index: 1;
+        pointer-events: none;
+        color: #2f2924;
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      }
+      .side-intro-copy__title {
+        margin: 0 0 22px;
+        font-size: 48px;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: 0;
+        color: #ff9f46;
+      }
+      .side-intro-copy__headline {
+        margin: 0 0 18px;
+        font-size: 28px;
+        line-height: 1.35;
+        font-weight: 800;
+        letter-spacing: 0;
+        word-break: keep-all;
+      }
+      .side-intro-copy__description {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.75;
+        font-weight: 500;
+        color: rgba(47, 41, 36, 0.72);
+        word-break: keep-all;
+      }
+      @media (max-width: 1180px) {
+        .side-intro-copy {
+          display: none;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    const sideIntro = document.createElement('aside');
+    sideIntro.className = 'side-intro-copy';
+    sideIntro.setAttribute('aria-label', 'PUMTO 소개');
+    sideIntro.innerHTML = `
+      <h1 class="side-intro-copy__title">PUMTO</h1>
+      <p class="side-intro-copy__headline">검색에서 비교, 예약까지.<br>미술학원 선택의 과정을 더 간단하게</p>
+      <p class="side-intro-copy__description">미술학원 탐색 · 비교 · 예약을 하나로 연결한 아동 미술학원 탐색 서비스 PUMTO입니다.</p>
+    `;
+    document.body.appendChild(sideIntro);
+  }
+
   function initGuideDots() {
     if (!SHOW_GUIDE_DOTS) return;
     // a) 가이드 동그라미 스타일 동적 주입
@@ -329,8 +388,12 @@
 
   // DOM 로딩 상태 확인하여 안전하게 초기화
   if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', initGuideDots);
+    window.addEventListener('DOMContentLoaded', () => {
+      initSideIntro();
+      initGuideDots();
+    });
   } else {
+    initSideIntro();
     initGuideDots();
   }
 })();
